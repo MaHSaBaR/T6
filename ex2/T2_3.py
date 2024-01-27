@@ -1,39 +1,34 @@
-def base(s, b):
+def convert_to_base(decimal_num, base):
     result = ''
-    r = 1
-    while s != 0:
-        r = s % b
-        s = int((s - r) / b)
-        result += str(r)
+    while decimal_num != 0:
+        remainder = decimal_num % base
+        decimal_num = int((decimal_num - remainder) / base)
+        result += str(remainder)
     result = result[::-1]
     return result
 
+def calculate_numerator_sum():
+    total_sum = 0
+    while True:
+        inputs = list(map(int, input().split()))
+        if inputs == [-1, -1]:
+            break
+        num, base = inputs
+        if base > 9 or base < 2:
+            print('Invalid base!')
+        else:
+            base_result = convert_to_base(numerator(num), base)
+            total_sum += int(base_result)
+
+    return total_sum
+
 def numerator(n):
     a = 0
-    for i in range(1,n+1):
+    for i in range(1, n+1):
         if n % i == 0:
             a += i
     return a
 
-
-
-
-l = []
-s = 0
-w = ''
-while l != [-1, -1]:
-    l = list(map(int, input().split()))
-    if l == [-1,-1]:
-        break
-    if l[1] > 9 or l[1] < 2:
-        w = 'invalid base!'
-    else:
-        a = base(numerator(l[0]),l[1])
-        s += int(a)
-    
-    
-if w == 'invalid base!':
-    print(w)
-else:
-    print(s)
-
+if __name__ == "__main__":
+    result = calculate_numerator_sum()
+    print(result)
