@@ -1,30 +1,28 @@
-n = int(input())
-
-t = ''
-l =[]
-
-def fact(n):
+def factorial(n):
     if n == 0:
-        fact = 1
+        return 1
     else:
-        fact = 1
+        result = 1
         for i in range(1, n+1):
-            fact = fact * i
-    return fact
+            result *= i
+        return result
 
+def binomial_coefficient(n, k):
+    return int(factorial(n) / (factorial(n - k) * factorial(k)))
 
-def choose(n, k):
-    return int(fact(n)/(fact(n-k) * fact(k)))
+def generate_pascal_triangle(rows):
+    triangle = []
+    for i in range(rows):
+        row = [str(binomial_coefficient(i, j)) for j in range(i + 1)]
+        triangle.append(' '.join(row))
+    return triangle
 
+def main():
+    n = int(input("Enter the number of rows for Pascal's Triangle: "))
+    pascal_triangle = generate_pascal_triangle(n)
 
-for i in range(n):
-    for j in range(i+1):
-        t += str(choose(i, j))+ ' '
-    l.append(t)
-    t = ''
+    for row in pascal_triangle:
+        print(row)
 
-for i in l:
-    print(i)
-
-
-    
+if __name__ == "__main__":
+    main()
