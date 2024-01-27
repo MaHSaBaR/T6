@@ -1,67 +1,47 @@
 import numpy as np
 
-file_name = input('') + '.txt'
-with open(file_name) as f:
-    reader = f.readlines()
+def read_matrix(file_name):
+    with open(file_name) as f:
+        reader = f.readlines()
 
-    n = reader[0].split(' ')[0]
-    n = int(n)
-    m = reader[0].split(' ')[1]
-    m = int(m)
+        n, m = map(int, reader[0].split())
+        matrices = []
 
-    M = np.zeros((m,m))
+        for i in range(1, n * m + 1, m):
+            matrix_data = [list(map(float, row.split())) for row in reader[i:i+m]]
+            matrices.append(np.array(matrix_data))
 
-    matrix_list = []
-    for i in range(1,n*m + 1,m):
-        for j in range(m):
-            M[j] = reader[i+j].split(' ')
-        matrix_list.append(M)
-        M = np.zeros((m,m))
+    return matrices
 
+def main():
+    file_name = input('Enter file name: ') + '.txt'
+    matrices = read_matrix(file_name)
 
-    dict = {}
-    for k in matrix_list:
-        det = np.linalg.det(k)
-        dict[det] = k
+    matrix_dict = {}
+    for matrix in matrices:
+        determinant = np.linalg.det(matrix)
+        matrix_dict[determinant] = matrix
 
-    l = list(dict.keys())
-    l.sort()
-    positive = []
-    negative = []
-    for x in l:
-        if x <= 0:
-            negative.append(x)
+    sorted_determinants = sorted(matrix_dict.keys())
+    positive_determinants = [x for x in sorted_determinants if x > 0]
+    negative_determinants = [x for x in sorted_determinants if x <= 0]
+
+    if len(positive_determinants) > 1 and len(negative_determinants) > 1:
+        if positive_determinants[0] * positive_determinants[1] > negative_determinants[0] * negative_determinants[1]:
+            result_matrix = np.matmul(matrix_dict[positive_determinants[0]], matrix_dict[positive_determinants[1]])
         else:
-            positive.append(x)
-    
-    positive.sort(reverse= True)
-    negative.sort()
-    
-    if len(positive) > 1 and len(negative) > 1:
-        if positive[0]*positive[1] > negative[0]*negative[1]:
-            X = np.matmul(dict[positive[0]],dict[positive[1]])
-        else:
-            X = np.matmul(dict[negative[1]],dict[negative[0]])
+            result_matrix = np.matmul(matrix_dict[negative_determinants[1]], matrix_dict[negative_determinants[0]])
+    elif len(positive_determinants) <= 1:
+        result_matrix = np.matmul(matrix_dict[sorted_determinants[1]], matrix_dict[sorted_determinants[0]])
+    elif len(negative_determinants) <= 1:
+        result_matrix = np.matmul(matrix_dict[sorted_determinants.pop()], matrix_dict[sorted_determinants.pop()])
 
-    elif len(positive) <= 1:
-        X = np.matmul(dict[l[1]],dict[l[0]])
-    elif len(negative) <= 1 :
-        X = np.matmul(dict[l.pop()],dict[l.pop()])
+    inverse_matrix = np.linalg.inv(result_matrix)
 
-    X = np.linalg.inv(X)
+    for row in inverse_matrix:
+        for i, element in enumerate(row[:-1]):
+            print(format(element, '.3f'), end=' ')
+        print(format(row[-1], '.3f'))
 
-
-    for i in range(m):
-        for j in range(m -1):
-            print(format(X[i][j],'.3f'), end = ' ')
-        print(format(X[i][m-1],'.3f'))
-
-
-
-            
-
-
-
-
-
-
+if __name__ == "__main__":
+    main()
