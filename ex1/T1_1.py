@@ -1,30 +1,18 @@
-n = int(input())
-m = int(input())
+def bin_addition_count(n, m):
+    binary_n = bin(n)[2:]
+    binary_m = bin(m)[2:]
 
-N = bin(n)
-M = bin(m)
+    max_len = max(len(binary_n), len(binary_m))
+    binary_n = binary_n.zfill(max_len)
+    binary_m = binary_m.zfill(max_len)
 
-if len(str(N)) > len(str(M)) :
-    m3 =(len(str(N))-len(str(M)))*'0'+ str(M)
-    m3=m3.replace('0b','')
-    n3 = str(N).replace('0b','')
+    sum_result = [int(bit_n) + int(bit_m) for bit_n, bit_m in zip(binary_n, binary_m) if int(bit_n) + int(bit_m) == 1]
 
-elif len(str(N)) < len(str(M)) :
-    n3 =(len(str(M))-len(str(N)))*'0'+ str(N)
-    n3=n3.replace('0b','')
-    m3 = str(M).replace('0b','')
+    return len(sum_result)
 
-else:
-    n3=str(N).replace('0b','')
-    m3=str(M).replace('0b','')
+# Get input from the user
+n = int(input("Enter the first integer: "))
+m = int(input("Enter the second integer: "))
 
-l=[]
-for i in range(len(n3)):
-    a = int(n3[i])+int(m3[i]) 
-    if a == 1:
-        l.append(a)
-    
-
-
-print(len(l))
-
+result = bin_addition_count(n, m)
+print("Number of differing bits:", result)
