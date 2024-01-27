@@ -1,24 +1,26 @@
-a = str(input()).strip()
-n = int(input())
-a = a.split(' ')
-s = set(a)
-ind = set(enumerate(a))
-l = []
-s2 = set()
-for i,x in ind:
-    y = n - int(x)
-    y = str(y)
-    s.remove(x)
-    if y in s:
-        if not y in s2:
-            l.append(i+a.index(y))
-            s2.add(x)
-    s.add(x)
+def find_indices_with_sum(nums, target_sum):
+    indices = set()
+    seen = set()
 
-l = sorted(l)
+    for i, x in enumerate(nums):
+        complement = target_sum - int(x)
+        complement_str = str(complement)
 
-if len(l) == 0:
-    print('Not Found!')
-else:
-    for x in l:
-        print(x)
+        if complement_str in seen:
+            indices.add((i, nums.index(complement_str)))
+        seen.add(x)
+
+    return sorted(indices)
+
+if __name__ == "__main__":
+    input_str = input().strip()
+    target = int(input())
+
+    nums = input_str.split(' ')
+    indices = find_indices_with_sum(nums, target)
+
+    if not indices:
+        print('Not Found!')
+    else:
+        for i, j in indices:
+            print(i + j)
