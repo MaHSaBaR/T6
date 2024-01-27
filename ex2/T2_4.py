@@ -1,64 +1,43 @@
-n = int(input())
-l = []
-ypoint= [0]
-xpoint = [0]
-for i in range(2):
-    l.append('.' * n)
+def print_grid(grid):
+    for row in grid:
+        print(' '.join(row))
 
-l[0] = [*l[0]]
-l[0][0] = '*'
-l[0] = ''.join(l[0])
-
-i = 0
-j = 0
-
-r = []
-d = ''
-while d != 'END':
-    d = input()
-    if d == 'R':
-        if j != n-1:
-            j += 1
-            l[i] = [*l[i]]
-            l[i][j] = '*'
-            l[i] = ''.join(l[i])
-            ypoint.append(i)
-            xpoint.append(j)
-    if d == 'L':
-        if j != 0:
-            j -= 1
-            l[i] = [*l[i]]
-            l[i][j] = '*'
-            l[i] = ''.join(l[i])
-            ypoint.append(i)
-            xpoint.append(j)
-    if d == 'B':
+def move(direction, i, j, grid, ypoints, xpoints):
+    if direction == 'R' and j < n - 1:
+        j += 1
+    elif direction == 'L' and j > 0:
+        j -= 1
+    elif direction == 'B':
         i += 1
-        l[i] = [*l[i]]
-        l[i][j] = '*'
-        l[i] = ''.join(l[i])
-        l.append('.' * n)
-        r.append(d)
-        ypoint.append(i)
-        xpoint.append(j)
+    grid[i][j] = '*'
+    ypoints.append(i)
+    xpoints.append(j)
+    return i, j
 
-h = len(r)
+def main():
+    n = int(input())
+    grid = [['.' for _ in range(n)] for _ in range(2)]
+    ypoints = [0]
+    xpoints = [0]
 
-T = 0
-if h != ypoint.pop() or xpoint.pop() != n-1:
-    T = 1
+    grid[0][0] = '*'
+    i, j = 0, 0
 
+    directions = []
+    direction = ''
+    while direction != 'END':
+        direction = input()
+        if direction in {'R', 'L', 'B'}:
+            i, j = move(direction, i, j, grid, ypoints, xpoints)
+            directions.append(direction)
 
-for i in range(h + 1):
-    l[i] = [*l[i]]
-    l[i] = ' '.join(l[i])
+    h = len(directions)
 
+    if h != ypoints.pop() or xpoints.pop() != n - 1:
+        print('There\'s no way out!')
+        return
 
-for i in range(h + 1):
-    print(l[i])
+    print_grid(grid)
 
-if T == 1:
-    print('There\'s no way out!')
-
-
- 
+if __name__ == "__main__":
+    main()
